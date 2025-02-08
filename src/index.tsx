@@ -34,7 +34,7 @@ let controller_listener = {};
 
 let event_count = 0;
 
-let focusedWindowInstance = window.SteamUIStore.GetFocusedWindowInstance();
+let focusedWindowInstance = {};
 
 function Content() {
   const [result, setResult] = useState<number | undefined>();
@@ -98,14 +98,14 @@ export default definePlugin(() => {
   console.log("Template plugin initializing, this is called once on frontend startup")
 
   focusedWindowInstance = window.SteamUIStore.GetFocusedWindowInstance();
-  controller_listener = SteamClient.Input.RegisterForControllerCommandMessages((m) => {
-    if (!m.eAction == 53) return;
+  controller_listener = SteamClient.System.UI.RegisterForSystemKeyEvents((m) => {
+    if (!m.eKey == 0) return;
 
     if (event_count == 0) {
       setTimeout(() => { event_count = 0; }, doubleTapTimeout);
     }
     event_count ++;
-    if (event_count == 6) {
+    if (event_count == 2) {
       navigateToggle();
     }
   });
