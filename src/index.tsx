@@ -28,6 +28,14 @@ const add = callable<[first: number, second: number], number>("add");
 // It starts a (python) timer which eventually emits the event 'timer_event'
 const startTimer = callable<[], void>("start_timer");
 
+const doubleTapTimeout = 200;
+
+let controller_listener = {};
+
+let event_count = 0;
+
+let focusedWindowInstance = window.SteamUIStore.GetFocusedWindowInstance();
+
 function Content() {
   const [result, setResult] = useState<number | undefined>();
 
@@ -76,8 +84,31 @@ function Content() {
   );
 };
 
+function navigateToggle() {
+    Navigation.CloseSideMenus()
+
+    if (focusedWindowInstance.m_history.location.pathname == "/library/home") {
+        Navigation.NavigateToLibraryTab();
+    } else {
+        Navigation.Navigate("/library/home")
+    }
+}
+
 export default definePlugin(() => {
   console.log("Template plugin initializing, this is called once on frontend startup")
+
+  focusedWindowInstance = window.SteamUIStore.GetFocusedWindowInstance();
+  controller_listener = SteamClient.Input.RegisterForControllerCommandMessages((m) => {
+    if (!m.eAction == 53) return;
+
+    if (event_count == 0) {
+      setTimeout(() => { event_count = 0; }, doubleTapTimeout);
+    }
+    event_count ++;
+    if (event_count == 6) {
+      navigateToggle();
+    }
+  });
 
   // serverApi.routerHook.addRoute("/decky-plugin-test", DeckyPluginRouterTest, {
   //   exact: true,
@@ -98,9 +129,9 @@ export default definePlugin(() => {
 
   return {
     // The name shown in various decky menus
-    name: "Test Plugin",
+    name: "RocketJump",
     // The element displayed at the top of your plugin's menu
-    titleView: <div className={staticClasses.Title}>Decky Example Plugin</div>,
+    titleView: <div className={staticClasses.Title}>RocketJump</div>,
     // The content of your plugin's menu
     content: <Content />,
     // The icon displayed in the plugin list

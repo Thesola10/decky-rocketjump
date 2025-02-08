@@ -1,7 +1,7 @@
 {
-  "name": "decky-plugin-template",
+  "name": "decky-rocketjump",
   "version": "0.0.1",
-  "description": "A template to quickly create decky plugins from scratch, based on TypeScript and webpack",
+  "description": "Double-tap the Steam button to quickly switch between Home and Library views.",
   "type": "module",
   "scripts": {
     "build": "rollup -c",
@@ -19,12 +19,12 @@
     "steam-deck",
     "deck"
   ],
-  "author": "You <you@you.tld>",
+  "author": "Karim Vergnes <me@thesola.io>",
   "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/SteamDeckHomebrew/decky-plugin-template/issues"
+    "url": "https://github.com/thesola10/decky-rocketjump/issues"
   },
-  "homepage": "https://github.com/SteamDeckHomebrew/decky-plugin-template#readme",
+  "homepage": "https://github.com/thesola10/decky-rocketjump#readme",
   "devDependencies": {
     "@decky/rollup": "^1.0.1",
     "@decky/ui": "^4.7.2",

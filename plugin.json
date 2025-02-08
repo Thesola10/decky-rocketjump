@@ -1,11 +1,11 @@
 {
-  "name": "Example Plugin",
-  "author": "John Doe",
-  "flags": ["debug", "_root"],
+  "name": "RocketJump",
+  "author": "TheSola10",
+  "flags": ["debug"],
   "api_version": 1,
   "publish": {
-    "tags": ["template", "root"],
-    "description": "Decky example plugin.",
+    "tags": ["template"],
+    "description": "Double-tap the Steam button to quickly go home.",
     "image": "https://opengraph.githubassets.com/1/SteamDeckHomebrew/PluginLoader"
   }
 }
