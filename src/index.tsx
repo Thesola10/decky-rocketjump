@@ -13,7 +13,7 @@ import {
   toaster,
   // routerHook
 } from "@decky/api"
-import { FaShip } from "react-icons/fa";
+import { FaForward } from "react-icons/fa";
 
 // import logo from "../assets/logo.png";
 
@@ -40,24 +40,6 @@ function Content() {
           {"Time between two Steam button presses, in milliseconds"}
         </SliderField>
       </PanelSectionRow>
-
-      {/* <PanelSectionRow>
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <img src={logo} />
-        </div>
-      </PanelSectionRow> */}
-
-      {/*<PanelSectionRow>
-        <ButtonItem
-          layout="below"
-          onClick={() => {
-            Navigation.Navigate("/decky-plugin-test");
-            Navigation.CloseSideMenus();
-          }}
-        >
-          Router
-        </ButtonItem>
-      </PanelSectionRow>*/}
     </PanelSection>
   );
 };
@@ -113,7 +95,7 @@ export default definePlugin(() => {
     // The content of your plugin's menu
     content: <Content />,
     // The icon displayed in the plugin list
-    icon: <FaShip />,
+    icon: <FaForward />,
     // The function triggered when your plugin unloads
     onDismount() {
       console.log("Unloading")
