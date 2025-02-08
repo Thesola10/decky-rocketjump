@@ -3,64 +3,42 @@ import {
   PanelSection,
   PanelSectionRow,
   Navigation,
-  staticClasses
+  staticClasses,
+  SliderField
 } from "@decky/ui";
 import {
   addEventListener,
   removeEventListener,
-  callable,
   definePlugin,
   toaster,
   // routerHook
 } from "@decky/api"
-import { useState } from "react";
 import { FaShip } from "react-icons/fa";
 
 // import logo from "../assets/logo.png";
 
-// This function calls the python function "add", which takes in two numbers and returns their sum (as a number)
-// Note the type annotations:
-//  the first one: [first: number, second: number] is for the arguments
-//  the second one: number is for the return value
-const add = callable<[first: number, second: number], number>("add");
-
-// This function calls the python function "start_timer", which takes in no arguments and returns nothing.
-// It starts a (python) timer which eventually emits the event 'timer_event'
-const startTimer = callable<[], void>("start_timer");
-
-const doubleTapTimeout = 200;
-
-let controller_listener = {};
+let doubleTapTimeout = 300;
 
 let event_count = 0;
 
 let focusedWindowInstance = {};
 
 function Content() {
-  const [result, setResult] = useState<number | undefined>();
-
-  const onClick = async () => {
-    const result = await add(Math.random(), Math.random());
-    setResult(result);
-  };
-
   return (
-    <PanelSection title="Panel Section">
+    <PanelSection title="Settings">
       <PanelSectionRow>
-        <ButtonItem
+        <p>{"Time between two Steam button presses, in ms"}</p>
+        <SliderField
           layout="below"
-          onClick={onClick}
+          step={50}
+          value={doubleTapTimeout}
+          min={100}
+          max={1000}
+          showValue={true}
+          onChange={(val) => doubleTapTimeout = val}
         >
-          {result ?? "Add two numbers via Python"}
-        </ButtonItem>
-      </PanelSectionRow>
-      <PanelSectionRow>
-        <ButtonItem
-          layout="below"
-          onClick={() => startTimer()}
-        >
-          {"Start Python timer"}
-        </ButtonItem>
+          {"Time between two Steam button presses, in milliseconds"}
+        </SliderField>
       </PanelSectionRow>
 
       {/* <PanelSectionRow>
@@ -85,20 +63,20 @@ function Content() {
 };
 
 function navigateToggle() {
-    Navigation.CloseSideMenus()
-
     if (focusedWindowInstance.m_history.location.pathname == "/library/home") {
         Navigation.NavigateToLibraryTab();
     } else {
         Navigation.Navigate("/library/home")
     }
+
+    setTimeout(Navigation.CloseSideMenus, 10)
 }
 
 export default definePlugin(() => {
   console.log("Template plugin initializing, this is called once on frontend startup")
 
   focusedWindowInstance = window.SteamUIStore.GetFocusedWindowInstance();
-  controller_listener = SteamClient.System.UI.RegisterForSystemKeyEvents((m) => {
+  SteamClient.System.UI.RegisterForSystemKeyEvents((m) => {
     if (!m.eKey == 0) return;
 
     if (event_count == 0) {
@@ -140,6 +118,10 @@ export default definePlugin(() => {
     onDismount() {
       console.log("Unloading")
       removeEventListener("timer_event", listener);
+
+      // Since RegisterForSystemKeyEvents does not return an unregister method,
+      // doing this essentially disarms our callback for this instance.
+      focusedWindowInstance = {};
       // serverApi.routerHook.removeRoute("/decky-plugin-test");
     },
   };
