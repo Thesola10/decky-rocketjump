@@ -44,11 +44,35 @@ function Content() {
   );
 };
 
+function getRunningAppIndex() {
+    let ra = window.SteamUIStore.RunningApps;
+
+    for (let i = 0; i < ra.length; i++) {
+        if (ra[i].appid == window.SteamUIStore.MainRunningAppID) {
+            return i;
+        }
+    }
+    return -1;
+}
+
 function navigateToggle() {
-    if (focusedWindowInstance.m_history.location.pathname == "/library/home") {
-        Navigation.NavigateToLibraryTab();
-    } else {
-        Navigation.Navigate("/library/home")
+    switch (window.SteamUIStore.RunningApps.length) {
+    case 0: // No app running: go Home, go to Library from Home
+        if (focusedWindowInstance.m_history.location.pathname == "/library/home") {
+            Navigation.NavigateToLibraryTab();
+        } else {
+            Navigation.Navigate("/library/home");
+        }
+    case 1: // One app running: go to App, go Home from App
+        if (focusedWindowInstance.m_history.location.pathname == "/apprunning") {
+            Navigation.Navigate("/library/home");
+        } else {
+            Navigation.Navigate("/apprunning");
+        }
+    default: // More apps running: cycle between Apps
+        let ra = window.SteamUIStore.RunningApps;
+        let nextIndex = (getRunningAppIndex() + 1) % ra.length;
+        window.SteamUIStore.SetRunningApp(ra[nextIndex].appid);
     }
 
     setTimeout(Navigation.CloseSideMenus, 10)
